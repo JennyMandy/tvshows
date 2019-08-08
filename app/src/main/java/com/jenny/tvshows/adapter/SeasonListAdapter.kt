@@ -5,15 +5,18 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.jenny.domain.model.Seasons
 import com.jenny.tvshows.Constants
 import com.jenny.tvshows.R
 import com.jenny.tvshows.activity.ActivitySeasonDetail
+import com.squareup.picasso.Picasso
 
-class SeasonListAdapter(private val context: Context, private val tvId: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SeasonListAdapter(private val context: Context, private val tvId: Int) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var inflater: LayoutInflater
     private var mList: List<Seasons>
 
@@ -35,7 +38,6 @@ class SeasonListAdapter(private val context: Context, private val tvId: Int) : R
             val season = mList.get(position)
             holder.name.text = season.name
             holder.seasonNo.text = season.season_number.toString()
-            holder.episodeNo.text = season.episode_number.toString()
             holder.seasonItemLayout.setOnClickListener {
                 val intent = Intent(context, ActivitySeasonDetail::class.java)
                 if (tvId > 0) {
@@ -44,6 +46,8 @@ class SeasonListAdapter(private val context: Context, private val tvId: Int) : R
                 intent.putExtra(Constants.SEASON_NO, season.season_number)
                 context.startActivity(intent)
             }
+            Picasso.get().load(Constants.IMAGE_URL + season.poster_path)
+                .into(holder.poster)
         }
     }
 
@@ -54,13 +58,13 @@ class SeasonListAdapter(private val context: Context, private val tvId: Int) : R
     internal inner class SeasonListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         public var name: TextView
         public var seasonNo: TextView
-        public var episodeNo: TextView
-        public var seasonItemLayout: LinearLayout
+        public var poster: ImageView
+        public var seasonItemLayout: ConstraintLayout
 
         init {
             name = view.findViewById(R.id.name)
             seasonNo = view.findViewById(R.id.season_no)
-            episodeNo = view.findViewById(R.id.episode_no)
+            poster = view.findViewById(R.id.poster)
             seasonItemLayout = view.findViewById(R.id.season_item_layout)
         }
     }

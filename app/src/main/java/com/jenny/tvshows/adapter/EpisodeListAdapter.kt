@@ -1,13 +1,17 @@
 package com.jenny.tvshows.adapter
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.jenny.domain.model.Episode
+import com.jenny.tvshows.Constants
 import com.jenny.tvshows.R
+import com.squareup.picasso.Picasso
 
 class EpisodeListAdapter(
     private val context: Context,
@@ -33,10 +37,19 @@ class EpisodeListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is SeasonListViewHolder) {
-            val season = mList.get(position)
-            holder.name.text = season.name
-            holder.seasonNo.text = season.season_number.toString()
-            holder.overview.text = season.overview
+            val episode = mList.get(position)
+            holder.name.text = episode.name
+            holder.seasonNo.text = episode.season_number.toString()
+            if (!TextUtils.isEmpty(episode.overview)) {
+                holder.overview.visibility = View.VISIBLE
+                holder.label3.visibility = View.VISIBLE
+                holder.overview.text = episode.overview
+            } else {
+                holder.overview.visibility = View.GONE
+                holder.label3.visibility = View.GONE
+            }
+            Picasso.get().load(Constants.IMAGE_URL + episode.still_path)
+                .into(holder.poster)
         }
     }
 
@@ -48,11 +61,15 @@ class EpisodeListAdapter(
         public var name: TextView
         public var seasonNo: TextView
         public var overview: TextView
+        public var label3: TextView
+        public var poster: ImageView
 
         init {
             name = view.findViewById(R.id.name)
             seasonNo = view.findViewById(R.id.season_no)
             overview = view.findViewById(R.id.overview)
+            label3 = view.findViewById(R.id.label3)
+            poster = view.findViewById(R.id.poster)
         }
     }
 }
